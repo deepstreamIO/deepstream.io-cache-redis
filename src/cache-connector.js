@@ -36,7 +36,7 @@ util.inherits( CacheConnector, Connection );
  * @returns {void}
  */
 CacheConnector.prototype.delete = function( key, callback ) {
-	this._client.del( key, callback );
+	this.client.del( key, callback );
 };
 
 /**
@@ -50,7 +50,7 @@ CacheConnector.prototype.delete = function( key, callback ) {
  * @returns {void}
  */
 CacheConnector.prototype.set = function( key, value, callback ) {
-	this._client.set( key, JSON.stringify( value ), callback );
+	this.client.set( key, JSON.stringify( value ), callback );
 };
 
 /**
@@ -64,7 +64,7 @@ CacheConnector.prototype.set = function( key, value, callback ) {
  * @returns {void}
  */
 CacheConnector.prototype.get = function( key, callback ) {
-	this._client.get( key, function( error, result ){
+	this.client.get( key, function( error, result ){
 		var parsedResult;
 
 		if( result === null ) {
