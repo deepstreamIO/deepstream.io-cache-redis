@@ -21,7 +21,7 @@ var CacheConnector = function( options ) {
 	Connection.call( this, options );
 
 	this.name = 'deepstream-cache-redis';
-	this.version = '0.2.2';
+	this.version = '0.2.3';
 };
 
 util.inherits( CacheConnector, Connection );
