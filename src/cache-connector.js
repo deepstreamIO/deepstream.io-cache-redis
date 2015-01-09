@@ -1,4 +1,5 @@
 var Connection = require( './connection' ),
+	pckg = require( '../package.json' ),
 	util = require( 'util' );
 
 /**
@@ -20,8 +21,8 @@ var Connection = require( './connection' ),
 var CacheConnector = function( options ) {
 	Connection.call( this, options );
 
-	this.name = 'deepstream-cache-redis';
-	this.version = '0.2.3';
+	this.name = pckg.name;
+	this.version = pckg.version;
 };
 
 util.inherits( CacheConnector, Connection );
