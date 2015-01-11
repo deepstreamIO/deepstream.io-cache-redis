@@ -11,6 +11,7 @@ var redis = require( 'redis' ),
  * {
  * 		host: <Number>
  * 		port: <String>
+ * 		[serverName]: <String> //optional
  * 		[password]: <String> //optional
  * }
  *
