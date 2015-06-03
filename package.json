@@ -4,7 +4,7 @@
   "description": "Redis cache connector for deepstream.io",
   "main": "src/cache-connector.js",
   "scripts": {
-    "test": "node node_modules/jasmine-node/lib/jasmine-node/cli.js test",
+    "test": "node node_modules/jasmine-node/lib/jasmine-node/cli.js test --captureExceptions",
     "watch": "node node_modules/jasmine-node/lib/jasmine-node/cli.js test --autotest --watch ./src"
   },
   "repository": {
