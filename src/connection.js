@@ -1,6 +1,7 @@
 var redis = require( 'redis' ),
 	EventEmitter = require( 'events' ).EventEmitter,
-	utils = require( 'util' );
+	utils = require( 'util'),
+	NUMBER = 'number';
 
 /**
  * Generic connection to Redis. Can be extended or
