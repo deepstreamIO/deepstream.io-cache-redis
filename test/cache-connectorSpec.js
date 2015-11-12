@@ -10,6 +10,12 @@ describe( 'the message connector has the correct structure', function(){
 		expect( function(){ new CacheConnector( 'gibberish' ); } ).toThrow();
 	} );
 
+	it( 'throws an error if the database-option is not a number', function(){
+		var dbSettings = { port: 6379, host: 'localhost', database: 'string' };
+		expect( function(){ new CacheConnector( dbSettings ); } ).toThrow();
+	} );
+
+
 	it( 'creates the cacheConnector', function( done ){
 		cacheConnector = new CacheConnector( settings );
 		expect( cacheConnector.isReady ).toBe( false );

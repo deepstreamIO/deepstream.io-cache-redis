@@ -24,6 +24,10 @@ var Connection = function( options ) {
 	this._options = options;
 	
 	this.client = redis.createClient( options.port, options.host );
+
+	if ( options.database ) {
+		this.client.select(options.database);
+	}
 	
 	if( options.password ) {
 		this.client.auth( options.password, this._onAuthResult.bind( this ) );
@@ -99,6 +103,11 @@ Connection.prototype._validateOptions = function( options ) {
 	}
 	if( !options.port ) {
 		throw new Error( 'Missing option \'port\' for redis-connector' );
+	}
+	if ( options.database ) {
+		if( typeof options.database !== NUMBER ) {
+			throw new Error( 'The chosen database must be a number' );
+		}
 	}
 };
 
