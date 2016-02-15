@@ -18,7 +18,7 @@
   },
   "homepage": "http://deepstream.io",
   "optionalDependencies": {
-    "hiredis": "0.1.17"
+    "hiredis": "0.4.1"
   },
   "dependencies": {
     "redis": "0.12.1"
