@@ -5,21 +5,22 @@ platform:
   - x64
 
 install:
-  - ps: Install-Product node 4
+  - ps: Install-Product node 4.4.4
   - npm install
 
 test_script:
   - node --version
   - npm --version
   - npm test
-  - npm run package
+  - scripts\package.bat
 
-after_build:
-  - "7z a deepstream.io-cache-redis-%APPVEYOR_REPO_COMMIT%-win32.zip %APPVEYOR_BUILD_FOLDER%"
-
+# Environment variable needs to change
 environment:
   REDIS_HOST: 54.93.183.16
   REDIS_PORT: 6379
+
+artifacts:
+  - path: build\*\*.zip
 
 deploy:
   provider: S3
@@ -28,7 +29,6 @@ deploy:
   secret_access_key:
     secure: AMUWZVZ4o7lS6f5ogqxTTCqDUR/TYEmPaVXzb7yRRyFUTF/zQFnZHYk1G/j7ie8/
   bucket: ds-server-artifacts
-  folder: $APPVEYOR_REPO_NAME
-  artifact: deepstream.io-cache-redis-*
+  folder: $(APPVEYOR_REPO_NAME)
 
 build: off
