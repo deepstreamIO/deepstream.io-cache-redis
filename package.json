@@ -4,14 +4,15 @@
   "description": "Redis cache connector for deepstream.io",
   "main": "src/cache-connector.js",
   "scripts": {
-    "test": "node node_modules/jasmine-node/lib/jasmine-node/cli.js test --captureExceptions",
-    "watch": "node node_modules/jasmine-node/lib/jasmine-node/cli.js test --autotest --watch ./src"
+    "test": "mocha",
+    "coverage": "istanbul cover _mocha",
+    "lint": "eslint \"src/**/*.js\" \"test/**/*.js\""
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/deepstreamIO/deepstream.io-cache-redis.git"
   },
-  "author": "Wolfram Hempel",
+  "author": "deepstreamHub GmbH",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/deepstreamIO/deepstream.io-cache-redis/issues"
@@ -24,8 +25,12 @@
     "redis": "2.4.2"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.9",
+    "eslint": "^2.10.2",
     "grunt": "~0.4.5",
-    "grunt-release": "0.13.0",
-    "jasmine-node": "1.14.5"
+    "grunt-release": "0.9.0",
+    "istanbul": "^0.4.3",
+    "mocha": "^2.5.2"
   }
 }

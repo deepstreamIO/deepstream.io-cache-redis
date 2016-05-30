@@ -1,6 +1,6 @@
-var Connection = require( './connection' ),
-	pckg = require( '../package.json' ),
-	util = require( 'util' );
+var Connection = require( './connection' )
+var pckg = require( '../package.json' )
+var util = require( 'util' )
 
 /**
  * A [deepstream](http://deepstream.io) cache connector
@@ -10,22 +10,19 @@ var Connection = require( './connection' ),
  * memory, writes them to disk it can make a storage connector
  * obsolete
  *
- * @author Wolfram Hempel
- * @copyright 2015 Hoxton One Ltd.
- *
  * @param {Object} options redis connection options. Please see ./connection.js
  *                         for details
  *
  * @constructor
  */
 var CacheConnector = function( options ) {
-	Connection.call( this, options );
+	Connection.call( this, options )
 
-	this.name = pckg.name;
-	this.version = pckg.version;
-};
+	this.name = pckg.name
+	this.version = pckg.version
+}
 
-util.inherits( CacheConnector, Connection );
+util.inherits( CacheConnector, Connection )
 
 /**
  * Deletes an entry from the cache.
@@ -37,8 +34,8 @@ util.inherits( CacheConnector, Connection );
  * @returns {void}
  */
 CacheConnector.prototype.delete = function( key, callback ) {
-	this.client.del( key, callback );
-};
+	this.client.del( key, callback )
+}
 
 /**
  * Writes a value to the cache.
@@ -51,8 +48,8 @@ CacheConnector.prototype.delete = function( key, callback ) {
  * @returns {void}
  */
 CacheConnector.prototype.set = function( key, value, callback ) {
-	this.client.set( key, JSON.stringify( value ), callback );
-};
+	this.client.set( key, JSON.stringify( value ), callback )
+}
 
 /**
  * Retrieves a value from the cache
@@ -65,23 +62,23 @@ CacheConnector.prototype.set = function( key, value, callback ) {
  * @returns {void}
  */
 CacheConnector.prototype.get = function( key, callback ) {
-	this.client.get( key, function( error, result ){
-		var parsedResult;
+	this.client.get( key, ( error, result ) => {
+		var parsedResult
 
 		if( result === null ) {
-			callback( error, null );
-			return;
+			callback( error, null )
+			return
 		}
 
 		try {
-			parsedResult = JSON.parse( result );
+			parsedResult = JSON.parse( result )
 		} catch ( e ) {
-			callback( e );
-			return;
+			callback( e )
+			return
 		}
 
-		callback( null, parsedResult );
-	});
-};
+		callback( null, parsedResult )
+	})
+}
 
-module.exports = CacheConnector;
+module.exports = CacheConnector
