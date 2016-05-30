@@ -1,0 +1,35 @@
+language: node_js
+
+env:
+  - CXX=g++-4.8
+
+node_js:
+  - "stable"
+  - "6"
+  - "5"
+  - "4"
+
+matrix:
+  include:
+    - node_js: "4"
+      os: osx
+
+script:
+  - npm run coverage
+
+after_script:
+  - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  - "tar -czf deepstream.io-cache-redis-$TRAVIS_COMMIT-$TRAVIS_OS_NAME.tar.gz ."
+
+addons:
+  artifacts:
+    paths:
+    - $( ls deepstream.io-cache-redis* )
+    target_paths:
+    - $TRAVIS_REPO_SLUG
+
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
