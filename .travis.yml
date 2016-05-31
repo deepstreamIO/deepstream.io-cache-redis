@@ -1,7 +1,9 @@
 language: node_js
 
 env:
-  - CXX=g++-4.8
+  global:
+    - CXX=g++-4.8
+    - ARTIFACTS_BUCKET=ds-server-artifacts
 
 node_js:
   - "4.4.4"
@@ -22,6 +24,7 @@ addons:
   artifacts:
     paths:
     - $( ls build/*/*.tar.gz )
+    - $( ls build/*/*.zip )
     target_paths:
     - $TRAVIS_REPO_SLUG
 

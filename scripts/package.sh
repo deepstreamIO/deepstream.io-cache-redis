@@ -2,7 +2,8 @@
 COMMIT=$( node scripts/details.js COMMIT )
 PACKAGE_VERSION=$( node scripts/details.js VERSION )
 PACKAGE_NAME=$( node scripts/details.js NAME )
-FILE_NAME=$PACKAGE_NAME-$PACKAGE_VERSION-$COMMIT-$OSTYPE
+OS=$( node scripts/details.js OS )
+FILE_NAME=$PACKAGE_NAME-$PACKAGE_VERSION-$COMMIT-$OS
 
 # Clean the build directory
 rm -rf build
@@ -18,7 +19,12 @@ unzip temp.zip -d $PACKAGE_NAME
 cd $PACKAGE_NAME
 npm install --production
 echo 'Installed NPM Dependencies'
-tar czf ../$FILE_NAME.tar.gz .
+
+if [ $OS == 'darwin' ]; then
+	zip -r ../$FILE_NAME.zip .
+else
+	tar czf ../$FILE_NAME.tar.gz .
+fi
 
 cd ..
 rm -rf $PACKAGE_NAME temp.zip
