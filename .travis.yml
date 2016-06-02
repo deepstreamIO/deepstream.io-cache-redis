@@ -6,6 +6,7 @@ env:
     - ARTIFACTS_BUCKET=ds-server-artifacts
 
 node_js:
+  - "stable"
   - "4.4.4"
 
 matrix:
