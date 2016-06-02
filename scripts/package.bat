@@ -1,8 +1,16 @@
 @echo off
 
+SET PACKAGED_NODE_VERSION=v4.4.4
+
+FOR /F "delims=" %%i in ('node --version') do call SET NODE_VERSION=%%i
 FOR /F "delims=" %%i in ('node scripts/details.js COMMIT') do call SET COMMIT=%%i
 FOR /F "delims=" %%i in ('node scripts/details.js NAME') do call SET PACKAGE_NAME=%%i
 FOR /F "delims=" %%i in ('node scripts/details.js VERSION') do call SET PACKAGE_VERSION=%%i
+
+if /I NOT %NODE_VERSION% == %PACKAGED_NODE_VERSION% (
+	echo Packaging only done on %PACKAGED_NODE_VERSION%
+	EXIT /B
+)
 
 SET FILE_NAME=%PACKAGE_NAME%-%PACKAGE_VERSION%-%COMMIT%-win32
 ECHO %FILE_NAME%

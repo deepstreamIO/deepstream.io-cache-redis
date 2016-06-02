@@ -1,9 +1,16 @@
 #!/bin/bash
+PACKAGED_NODE_VERSION="v4.4.4"
+NODE_VERSION=$( node --version )
 COMMIT=$( node scripts/details.js COMMIT )
 PACKAGE_VERSION=$( node scripts/details.js VERSION )
 PACKAGE_NAME=$( node scripts/details.js NAME )
 OS=$( node scripts/details.js OS )
 FILE_NAME=$PACKAGE_NAME-$PACKAGE_VERSION-$COMMIT-$OS
+
+if [ $NODE_VERSION != $PACKAGED_NODE_VERSION ]; then
+	echo Packaging only done on $PACKAGED_NODE_VERSION
+	exit
+fi
 
 # Clean the build directory
 rm -rf build
