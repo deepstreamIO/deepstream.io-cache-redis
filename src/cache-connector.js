@@ -16,10 +16,10 @@ var util = require( 'util' )
  * @constructor
  */
 var CacheConnector = function( options ) {
-	Connection.call( this, options )
+  Connection.call( this, options )
 
-	this.name = pckg.name
-	this.version = pckg.version
+  this.name = pckg.name
+  this.version = pckg.version
 }
 
 util.inherits( CacheConnector, Connection )
@@ -34,7 +34,7 @@ util.inherits( CacheConnector, Connection )
  * @returns {void}
  */
 CacheConnector.prototype.delete = function( key, callback ) {
-	this.client.del( key, callback )
+  this.client.del( key, callback )
 }
 
 /**
@@ -48,7 +48,7 @@ CacheConnector.prototype.delete = function( key, callback ) {
  * @returns {void}
  */
 CacheConnector.prototype.set = function( key, value, callback ) {
-	this.client.set( key, JSON.stringify( value ), callback )
+  this.client.set( key, JSON.stringify( value ), callback )
 }
 
 /**
@@ -62,23 +62,23 @@ CacheConnector.prototype.set = function( key, value, callback ) {
  * @returns {void}
  */
 CacheConnector.prototype.get = function( key, callback ) {
-	this.client.get( key, ( error, result ) => {
-		var parsedResult
+  this.client.get( key, ( error, result ) => {
+    var parsedResult
 
-		if( result === null ) {
-			callback( error, null )
-			return
-		}
+    if( result === null ) {
+      callback( error, null )
+      return
+    }
 
-		try {
-			parsedResult = JSON.parse( result )
-		} catch ( e ) {
-			callback( e )
-			return
-		}
+    try {
+      parsedResult = JSON.parse( result )
+    } catch ( e ) {
+      callback( e )
+      return
+    }
 
-		callback( null, parsedResult )
-	})
+    callback( null, parsedResult )
+  })
 }
 
 module.exports = CacheConnector
