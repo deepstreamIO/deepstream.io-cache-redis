@@ -5,14 +5,23 @@
 This connector uses [the npm redis package](https://www.npmjs.com/package/redis). Please have a look there for detailed options.
 
 ##Basic Setup
+```yaml
+plugins:
+  cache:
+    name: redis
+    options:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+```
+
 ```javascript
 var Deepstream = require( 'deepstream.io' ),
     RedisCacheConnector = require( 'deepstream.io-cache-redis' ),
     server = new Deepstream();
 
-server.set( 'cache', new RedisCacheConnector( { 
-  port: 6379, 
-  host: 'localhost' 
+server.set( 'cache', new RedisCacheConnector( {
+  port: 6379,
+  host: 'localhost'
 }));
 
 server.start();

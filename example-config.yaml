@@ -1,0 +1,6 @@
+plugins:
+  cache:
+    name: redis
+    options:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
