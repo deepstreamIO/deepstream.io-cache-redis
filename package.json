@@ -23,7 +23,7 @@
     "hiredis": "0.4.1"
   },
   "dependencies": {
-    "redis": "2.6.1"
+    "redis": "2.6.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
