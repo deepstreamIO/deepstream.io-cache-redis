@@ -24,7 +24,7 @@ var Connection = function( options ) {
   this._validateOptions( options )
   this._options = options
 
-  this.client = redis.createClient( options.port, options.host )
+  this.client = options.client ? options.client : redis.createClient( options )
 
   if ( options.database ) {
     this.client.select(options.database)
