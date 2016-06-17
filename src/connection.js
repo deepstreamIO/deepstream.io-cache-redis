@@ -24,7 +24,7 @@ var Connection = function( options ) {
   this._validateOptions( options )
   this._options = options
 
-  this.client = redis.createClient( options.port, options.host )
+  this.client = options.client ? options.client : redis.createClient( options )
 
   if ( options.database ) {
     this.client.select(options.database)
@@ -99,11 +99,13 @@ Connection.prototype._onDisconnect = function( error ) {
  * @returns {void}
  */
 Connection.prototype._validateOptions = function( options ) {
-  if( !options.host ) {
-    throw new Error( 'Missing option \'host\' for redis-connector' )
-  }
-  if( !options.port ) {
-    throw new Error( 'Missing option \'port\' for redis-connector' )
+  if ( !options.client ) {
+    if( !options.host ) {
+      throw new Error( 'Missing option \'host\' for redis-connector' )
+    }
+     if( !options.port ) {
+      throw new Error( 'Missing option \'port\' for redis-connector' )
+    }
   }
   if ( options.database ) {
     if( typeof options.database !== NUMBER ) {
@@ -111,5 +113,4 @@ Connection.prototype._validateOptions = function( options ) {
     }
   }
 }
-
 module.exports = Connection
