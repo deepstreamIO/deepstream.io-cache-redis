@@ -12,14 +12,6 @@ var MESSAGE_TIME = 20
 
 describe( 'the message connector has the correct structure', () => {
   var cacheConnector
-  it( 'throws an error if required connection parameters are missing', () => {
-    expect( () => { new CacheConnector( 'gibberish' ) } ).to.throw()
-  } )
-
-  it( 'throws an error if the database-option is not a number', () => {
-    var dbSettings = { port: 6379, host: 'localhost', database: 'string' }
-    expect( () => { new CacheConnector( dbSettings ) } ).to.throw()
-  } )
 
   it( 'creates the cacheConnector', ( done ) => {
     cacheConnector = new CacheConnector( settings )
