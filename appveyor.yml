@@ -1,7 +1,3 @@
-environment:
-  REDIS_HOST: 52.59.253.77
-  REDIS_PORT: 6379
-
 # Do not insert any code under here without making sures it's in publishingtest first
 os:
   - Visual Studio 2015
@@ -12,6 +8,10 @@ platform:
 install:
   - ps: Install-Product node 4.4.5
   - npm install
+  - nuget install redis-64 -excludeversion
+  - redis-64\tools\redis-server.exe --service-install
+  - redis-64\tools\redis-server.exe --service-start
+  - '@ECHO Redis Started'
 
 test_script:
   - node --version
