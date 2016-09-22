@@ -25,6 +25,21 @@ var CacheConnector = function( options ) {
 util.inherits( CacheConnector, Connection )
 
 /**
+ * Gracefully close the connection to redis
+ *
+ * Called when deepstream.close() is invoked.
+ * Emits 'close' event to notify deepstream of clean closure.
+ *
+ * @public
+ * @returns {void}
+ */
+CacheConnector.prototype.close = function(){
+  this.client.removeAllListeners( 'end'  )
+  this.client.once( 'end', this.emit.bind( this, 'close'  )  )
+  this.client.quit()
+}
+
+/**
  * Deletes an entry from the cache.
  *
  * @param   {String}   key
