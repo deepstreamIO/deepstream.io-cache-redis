@@ -1,8 +1,11 @@
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew update   ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew install redis  ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then redis-server --daemonize yes ; fi
+
 env:
   global:
     - CXX=g++-4.8
-    - REDIS_HOST=52.59.253.77
-    - REDIS_PORT=6379
 
 # Do not insert any code under here without making sures it's in publishingtest first
 language: node_js
@@ -13,6 +16,9 @@ plugins:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
+
+services:
+  - redis-server
 
 node_js:
   - "stable"
