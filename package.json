@@ -7,7 +7,7 @@
     "test": "mocha",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha",
     "lint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
-    "ci": "npm run coverage && npm run lint"
+    "ci": "npm run coverage"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,6 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
-    "eslint": "^3.0.1",
-    "eslint-config-airbnb": "^3.1.0",
     "istanbul": "^0.4.3",
     "mocha": "^3.0.1"
   }
