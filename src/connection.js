@@ -21,18 +21,16 @@ var NUMBER = 'number'
  * To connect to a cluster you can use:
  *
  * {
- *   options: {
- *     nodes: [
- *       // Use password "password-for-30001" for 30001
- *       { port: <Number>, password: <String> },
- *       // Don't use password when accessing 30002
- *       { port: <Number>, password: null }
- *       // Other nodes will use "fallback-password"
- *     ],
- *     redisOptions: {
- *       password: 'fallback-password'
- *     }
- *   }
+ *    nodes: [
+ *      // Use password "password-for-30001" for 30001
+ *      { port: <Number>, password: <String> },
+ *      // Don't use password when accessing 30002
+ *      { port: <Number>, password: null }
+ *      // Other nodes will use "fallback-password"
+ *    ],
+ *    redisOptions: {
+ *      password: 'fallback-password'
+ *    }
  * }
  *
  * For more details and options see https://github.com/luin/ioredis
@@ -43,13 +41,14 @@ var Connection = function( options ) {
 
   this._validateOptions( options )
   //See https://github.com/luin/ioredis/wiki/Improve-Performance
-  options.dropBufferSupport = true
-
+  
   if( options.nodes instanceof Array ) {
+  	options.redisOptions.dropBufferSupport = true
     var nodes = options.nodes
     delete options.nodes
     this.client = new Redis.Cluster( nodes, options )
   } else {
+  	options.dropBufferSupport = true
     this.client = new Redis( options )
   }
 
