@@ -6,7 +6,7 @@ platform:
   - x64
 
 install:
-  - ps: Install-Product node 4.4.5
+  - ps: Install-Product node 6.9
   - npm install
   - nuget install redis-64 -excludeversion
   - redis-64\tools\redis-server.exe --service-install
