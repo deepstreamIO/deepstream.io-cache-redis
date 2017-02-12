@@ -23,12 +23,16 @@
     "hiredis": "^0.5.0"
   },
   "dependencies": {
-    "ioredis": "^2.2.0"
+    "ioredis": "^3.0.0-0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "istanbul": "^0.4.3",
-    "mocha": "^3.0.1"
+    "mocha": "^3.0.1",
+    "eslint-config-deepstream": ">=0.1.0"
+  },
+  "eslintConfig": {
+    "extends": "deepstream"
   }
 }
