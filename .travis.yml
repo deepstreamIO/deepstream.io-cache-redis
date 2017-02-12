@@ -38,9 +38,9 @@ script:
 deploy:
   - provider: s3
     access_key_id:
-      secure: "PRZCfZNciZ5FR16ILFD3MeN8MzdPvrPi4Hc6zwMQEIGnd4Y70Xg/1ilMnPvpcndAXR7rnngfG6ydPPYs3OuEezj5q1Y9TFMuEJjCTjlZC2+m2qaNO+FA882c4gV7JHxOVOLqdmbQ/cG5L+Jvn2aaMRrkNHGnmKPIFx3o4AkjoTA="
+      secure: "dX9lXuaOIxF63nsu+T0ryMstd/tCU04j32FIHJl9TDV/V6M3dT9uMOHcnhrWJAwTIpDMiYYbi4pDC6P/v3yLz4TwIdnDjnXNIY0MS2MtFhty2skS2Fr1zDFaSz4ZsWZaUgqwqi8hBNeGEO7wxfUFBKfGa17N/avSqsmd9NMqpoI="
     secret_access_key:
-      secure: "VUeS1R/mz/N5y5t/7sppKTVGS9pHDHEfFLfuRolLWGUvFZp3otlP4w+5bdcNduDipMn6SOjRT3BScLxkpr7+QdpLSpwm2k/2B9qyPHyOYm+mK1OQiJQ1Y6RfXiNa40uosRIrHE9SJKOS+uXmSKzRC2bxVXIP7dyUgYUDn8GFWOo="
+      secure: "PPXpvcl2RQQ7EUWMgAAfeoOuh3QgvXEeTY/2vW62rR1cRWuJEQwB8ziL+7ysNMkdVoFUpdnQoN36C3Q0rqVmqt0Zp0RC/61QRYqwIMi4ERewKywGpmqpxeoQagtj0u2IvWvHcHN8lEzOHBMSXpeCWG7REZj0K5ITSSmt0bKTnR0="
     bucket: ds-server-artifacts
     skip_cleanup: true
     acl: public_read
