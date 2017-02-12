@@ -1,7 +1,7 @@
-var Redis = require( 'ioredis' )
-var EventEmitter = require( 'events' ).EventEmitter
-var utils = require( 'util')
-var NUMBER = 'number'
+const Redis = require( 'ioredis' )
+const EventEmitter = require( 'events' ).EventEmitter
+const utils = require( 'util')
+const NUMBER = 'number'
 
 /**
  * Generic connection to Redis. Can be extended or
@@ -36,12 +36,12 @@ var NUMBER = 'number'
  * For more details and options see https://github.com/luin/ioredis
  * @constructor
  */
-var Connection = function( options ) {
+const Connection = function( options ) {
   this.isReady = false
 
   this._validateOptions( options )
   //See https://github.com/luin/ioredis/wiki/Improve-Performance
-  
+
   if( options.nodes instanceof Array ) {
     options.redisOptions.dropBufferSupport = true
     var nodes = options.nodes

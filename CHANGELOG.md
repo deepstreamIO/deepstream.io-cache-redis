@@ -1,3 +1,9 @@
+## [1.0.3] - 2017-02-12
+
+### Enhancements
+- Bumping ioreids to version 3
+- Using travis/appveyor redis instead of self-hosted
+
 ## [1.0.2] - 2016-09-22
 
 ### Enhancements
