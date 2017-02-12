@@ -1,8 +1,9 @@
 ## [1.0.3] - 2017-02-12
 
 ### Enhancements
-- Bumping ioreids to version 3
+- Bumping ioredis to version 3
 - Using travis/appveyor redis instead of self-hosted
+- Building against node version 6.9
 
 ## [1.0.2] - 2016-09-22
 
