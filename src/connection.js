@@ -1,3 +1,5 @@
+'use strict'
+
 const Redis = require( 'ioredis' )
 const EventEmitter = require( 'events' ).EventEmitter
 const utils = require( 'util')
