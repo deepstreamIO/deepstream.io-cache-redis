@@ -23,6 +23,7 @@ services:
 node_js:
   - "stable"
   - "6.9"
+  - "4"
 
 matrix:
   include:
