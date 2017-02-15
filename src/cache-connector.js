@@ -1,3 +1,5 @@
+'use strict'
+
 const Connection = require('./connection')
 const pckg = require('../package.json')
 const util = require('util')

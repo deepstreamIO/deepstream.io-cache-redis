@@ -1,5 +1,6 @@
-/* global describe, expect, it, jasmine */
+'use strict'
 
+/* global describe, expect, it, jasmine */
 const expect = require('chai').expect
 const CacheConnector = require('../src/cache-connector')
 const EventEmitter = require('events').EventEmitter
