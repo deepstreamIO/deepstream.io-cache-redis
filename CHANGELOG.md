@@ -1,3 +1,8 @@
+## [1.0.4] - 2017-02-15
+
+### Fixes
+- Adding back node 4 compatibility
+
 ## [1.0.3] - 2017-02-12
 
 ### Enhancements
