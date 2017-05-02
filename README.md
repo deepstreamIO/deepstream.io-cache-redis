@@ -1,5 +1,7 @@
 # deepstream.io-cache-redis [![npm version](https://badge.fury.io/js/deepstream.io-cache-redis.svg)](http://badge.fury.io/js/deepstream.io-cache-redis)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/deepstreamIO/deepstream.io-cache-redis.svg)](https://greenkeeper.io/)
+
 [deepstream](http://deepstream.io) cache connector for [redis](http://redis.io/)
 
 This connector uses [the npm redis package](https://www.npmjs.com/package/redis). Please have a look there for detailed options.
