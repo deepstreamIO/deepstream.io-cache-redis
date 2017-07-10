@@ -21,13 +21,13 @@ services:
   - redis-server
 
 node_js:
-  - "stable"
-  - "6.9"
+  - "8"
+  - "6.11"
   - "4"
 
 matrix:
   include:
-    - node_js: "6.9"
+    - node_js: "6.11"
       os: osx
 
 script:
