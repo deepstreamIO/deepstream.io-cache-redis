@@ -7,7 +7,8 @@ const EventEmitter = require('events').EventEmitter
 
 const settings = {
   port: process.env.REDIS_PORT || 6379,
-  host: process.env.REDIS_HOST || 'localhost'
+  host: process.env.REDIS_HOST || 'localhost',
+  ttl: 1
 }
 
 describe('the message connector has the correct structure', () => {
@@ -66,4 +67,17 @@ describe('the message connector has the correct structure', () => {
       done()
     })
   })
+
+  it('properly expires keys', (done) => {
+    cacheConnector.set('willExpire', { some: 'data' }, (error) => {
+      expect(error).to.equal(null)
+      setTimeout(() => {
+        cacheConnector.get('willExpire', (err, value) => {
+          expect(err).to.equal(null)
+          expect(value).to.equal(null)
+          done()
+        })
+      }, 2000)
+    })
+  }).timeout(5000)
 })

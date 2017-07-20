@@ -18,6 +18,7 @@ const NUMBER = 'number'
  *    [serverName]: <String> //optional
  *    [password]: <String> //optional
  *    [db]: <Integer> //optional
+ *    ttl: <Integer> //optional
  * }
  *
  * To connect to a cluster you can use:
@@ -40,7 +41,7 @@ const NUMBER = 'number'
  */
 const Connection = function( options ) {
   this.isReady = false
-
+  this.options = options
   this._validateOptions( options )
   //See https://github.com/luin/ioredis/wiki/Improve-Performance
 
