@@ -22,7 +22,6 @@ const CacheConnector = function (options) {
 
   this.name = pckg.name
   this.version = pckg.version
-  this.ttl = this.options.ttl || 2592000 // 30 days
 }
 
 util.inherits(CacheConnector, Connection)
@@ -68,7 +67,11 @@ CacheConnector.prototype.delete = function (key, callback) {
  * @returns {void}
  */
 CacheConnector.prototype.set = function (key, value, callback) {
-  this.client.setex(key, this.ttl, JSON.stringify(value), callback)
+  if (this.options.ttl) {
+    this.client.setex(key, this.options.ttl, JSON.stringify(value), callback)
+  } else {
+    this.client.set(key, JSON.stringify(value), callback)
+  }
 }
 
 /**
