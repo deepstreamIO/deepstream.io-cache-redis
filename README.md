@@ -2,7 +2,7 @@
 
 [deepstream](http://deepstream.io) cache connector for [redis](http://redis.io/)
 
-This connector uses [the npm redis package](https://www.npmjs.com/package/redis). Please have a look there for detailed options.
+This connector uses [the npm redis package](https://www.npmjs.com/package/ioredis). Please have a look there for detailed options.
 
 ##Basic Setup
 ```yaml
@@ -12,6 +12,7 @@ plugins:
     options:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+      ttl: 86400 // one day
 ```
 
 ```javascript
