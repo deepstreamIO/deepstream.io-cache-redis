@@ -1,3 +1,8 @@
+## [1.1.0] - 2017-07-20
+
+### Enhancements
+- Adding optional time-to-live to writes
+
 ## [1.0.4] - 2017-02-15
 
 ### Fixes

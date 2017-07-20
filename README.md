@@ -12,7 +12,7 @@ plugins:
     options:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
-      ttl: 86400 // one day
+      ttl: 86400 // optional time to live in seconds
 ```
 
 ```javascript
