@@ -12,6 +12,7 @@ plugins:
     options:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+      db: ${REDIS_DB_INDEX} // optional
       ttl: 86400 // optional time to live in seconds
 ```
 
