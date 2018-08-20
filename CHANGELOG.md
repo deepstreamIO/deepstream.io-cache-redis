@@ -1,3 +1,8 @@
+## [1.2.0] - 2018-08-20
+  
+### Enhancements
+- Using pipeline to speedup reads and writes (at a risk of too much GC that node 10 should fix!)
+
 ## [1.1.0] - 2017-07-20
 
 ### Enhancements
