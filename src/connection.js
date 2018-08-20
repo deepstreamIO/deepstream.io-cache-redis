@@ -39,93 +39,93 @@ const NUMBER = 'number'
  * For more details and options see https://github.com/luin/ioredis
  * @constructor
  */
-const Connection = function( options ) {
-  this.isReady = false
-  this.options = options
-  this._validateOptions( options )
-  //See https://github.com/luin/ioredis/wiki/Improve-Performance
+module.exports = class Connection extends EventEmitter {
 
-  if( options.nodes instanceof Array ) {
-    options.redisOptions.dropBufferSupport = true
-    var nodes = options.nodes
-    delete options.nodes
-    this.client = new Redis.Cluster( nodes, options )
-  } else {
-    options.dropBufferSupport = true
-    this.client = new Redis( options )
+  constructor (options) {
+    super()
+    this.isReady = false
+    this.options = options
+    this._validateOptions(options)
+    //See https://github.com/luin/ioredis/wiki/Improve-Performance
+
+    if (options.nodes instanceof Array) {
+      options.redisOptions.dropBufferSupport = true
+      var nodes = options.nodes
+      delete options.nodes
+      this.client = new Redis.Cluster(nodes, options)
+    } else {
+      options.dropBufferSupport = true
+      this.client = new Redis(options)
+    }
+
+    this.client.on('ready', this._onReady.bind(this))
+    this.client.on('error', this._onError.bind(this))
+    this.client.on('end', this._onDisconnect.bind(this))
   }
 
-  this.client.on( 'ready', this._onReady.bind( this ) )
-  this.client.on( 'error', this._onError.bind( this ) )
-  this.client.on( 'end', this._onDisconnect.bind( this ) )
-}
+  /**
+   * Callback for authentication responses
+   *
+   * @param   {String} error  Error message or null
+   *
+   * @void
+   * @returns {void}
+   */
+  _onAuthResult (error) {
+    if (error) {
+      this._onError('Failed to authenticate connection: ' + error.toString())
+    }
+  }
 
-utils.inherits( Connection, EventEmitter )
+  /**
+   * Callback for established connections
+   *
+   * @ready
+   * @returns {void}
+   */
+  _onReady () {
+    this.isReady = true
+    this.emit('ready')
+  }
 
-/**
- * Callback for authentication responses
- *
- * @param   {String} error  Error message or null
- *
- * @void
- * @returns {void}
- */
-Connection.prototype._onAuthResult = function( error ) {
-  if( error ) {
-    this._onError( 'Failed to authenticate connection: ' + error.toString() )
+  /**
+   * Generic error callback
+   *
+   * @param   {String} error
+   *
+   * @ready
+   * @returns {void}
+   */
+  _onError (error) {
+    this.emit('error', 'REDIS error:' + error)
+  }
+
+  /**
+   * Callback for disconnection events
+   *
+   * @param   {String} error reason for disconnect
+   *
+   * @ready
+   * @returns {void}
+   */
+  _onDisconnect (error) {
+    this._onError('disconnected')
+  }
+
+  /**
+   * Checks if all required parameters are present
+   *
+   * @param   {Object} options
+   *
+   * @ready
+   * @returns {void}
+   */
+  _validateOptions (options) {
+    if (!options) {
+      throw new Error('Missing option \'host\' for redis-connector')
+    }
+    if (options.nodes && !(options.nodes instanceof Array)) {
+      throw new Error('Option nodes must be an array of connection parameters for cluster')
+    }
   }
 }
-
-/**
- * Callback for established connections
- *
- * @ready
- * @returns {void}
- */
-Connection.prototype._onReady = function() {
-  this.isReady = true
-  this.emit( 'ready' )
-}
-
-/**
- * Generic error callback
- *
- * @param   {String} error
- *
- * @ready
- * @returns {void}
- */
-Connection.prototype._onError = function( error ) {
-  this.emit( 'error', 'REDIS error:' + error )
-}
-
-/**
- * Callback for disconnection events
- *
- * @param   {String} error reason for disconnect
- *
- * @ready
- * @returns {void}
- */
-Connection.prototype._onDisconnect = function( error ) {
-  this._onError( 'disconnected' )
-}
-
-/**
- * Checks if all required parameters are present
- *
- * @param   {Object} options
- *
- * @ready
- * @returns {void}
- */
-Connection.prototype._validateOptions = function( options ) {
-  if( !options ) {
-    throw new Error( 'Missing option \'host\' for redis-connector' )
-  }
-  if( options.nodes && !( options.nodes instanceof Array ) ) {
-    throw new Error( 'Option nodes must be an array of connection parameters for cluster' )
-  }
-}
-
-module.exports = Connection

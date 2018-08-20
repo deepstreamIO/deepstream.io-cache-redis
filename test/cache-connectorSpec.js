@@ -8,7 +8,7 @@ const EventEmitter = require('events').EventEmitter
 const settings = {
   port: process.env.REDIS_PORT || 6379,
   host: process.env.REDIS_HOST || 'localhost',
-  ttl: 1
+  ttl: 2
 }
 
 describe('the message connector has the correct structure', () => {
@@ -77,7 +77,32 @@ describe('the message connector has the correct structure', () => {
           expect(value).to.equal(null)
           done()
         })
-      }, 2000)
+      }, 2500)
     })
   }).timeout(5000)
+
+  it('sets ALOT of values (as object)', (done) => {
+    const iterations = 70000;
+    let resultCount = 0;
+    for (let i = 0; i < iterations; i++) {
+      cacheConnector.set('someValue' + i, { value: i }, (error) => {
+        expect(error).to.equal(null)
+        resultCount++;
+        if (resultCount === iterations) done();
+      })
+    }
+  }).timeout(10000)
+
+  it('gets ALOT of values (as object)', (done) => {
+    const iterations = 70000;
+    let resultCount = 0;
+    for (let i = 0; i < iterations; i++) {
+      cacheConnector.get('someValue' + i, (error, result) => {
+        expect(error).to.equal(null)
+        expect(result).to.deep.equal({ value: i });
+        resultCount++;
+        if (resultCount === iterations) done();
+      })
+    }
+  }).timeout(10000)
 })

@@ -4,7 +4,7 @@
   "description": "Redis cache connector for deepstream.io",
   "main": "src/cache-connector.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --exit",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha",
     "lint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
     "ci": "npm run coverage"
@@ -20,13 +20,13 @@
   },
   "homepage": "http://deepstream.io",
   "dependencies": {
-    "ioredis": "^3.1.1"
+    "ioredis": "^4.0.0"
   },
   "devDependencies": {
-    "chai": "^4.0.2",
-    "coveralls": "^2.13.1",
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
     "istanbul": "^0.4.5",
-    "mocha": "^3.4.2",
+    "mocha": "^5.2.0",
     "eslint-config-deepstream": ">=2.2.1"
   },
   "eslintConfig": {
