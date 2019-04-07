@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha --exit src/",
     "coverage": "nyc mocha src/",
-    "ci": "npm run coverage"
+    "ci": "npm run coverage",
+    "docker": "docker start -p 6379:6379 redis"
   },
   "repository": {
     "type": "git",

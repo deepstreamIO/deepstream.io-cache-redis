@@ -1,5 +1,5 @@
-const Redis = require( 'ioredis' )
-const { EventEmitter } = require( 'events' )
+const Redis = require( "ioredis" );
+const { EventEmitter } = require( "events" );
 
 /**
  * Generic connection to Redis. Can be extended or
@@ -37,26 +37,26 @@ const { EventEmitter } = require( 'events' )
  */
 module.exports = class Connection extends EventEmitter {
 
-  constructor (options) {
-    super()
-    this.isReady = false
-    this.options = options
-    this._validateOptions(options)
+  constructor(options) {
+    super();
+    this.isReady = false;
+    this.options = options;
+    this._validateOptions(options);
     //See https://github.com/luin/ioredis/wiki/Improve-Performance
 
     if (options.nodes instanceof Array) {
-      options.redisOptions.dropBufferSupport = true
-      var nodes = options.nodes
-      delete options.nodes
-      this.client = new Redis.Cluster(nodes, options)
+      options.redisOptions.dropBufferSupport = true;
+      var nodes = options.nodes;
+      delete options.nodes;
+      this.client = new Redis.Cluster(nodes, options);
     } else {
-      options.dropBufferSupport = true
-      this.client = new Redis(options)
+      options.dropBufferSupport = true;
+      this.client = new Redis(options);
     }
 
-    this.client.on('ready', this._onReady.bind(this))
-    this.client.on('error', this._onError.bind(this))
-    this.client.on('end', this._onDisconnect.bind(this))
+    this.client.on("ready", this._onReady.bind(this));
+    this.client.on("error", this._onError.bind(this));
+    this.client.on("end", this._onDisconnect.bind(this));
   }
 
   /**
@@ -67,9 +67,9 @@ module.exports = class Connection extends EventEmitter {
    * @void
    * @returns {void}
    */
-  _onAuthResult (error) {
+  _onAuthResult(error) {
     if (error) {
-      this._onError('Failed to authenticate connection: ' + error.toString())
+      this._onError("Failed to authenticate connection: " + error.toString());
     }
   }
 
@@ -79,9 +79,9 @@ module.exports = class Connection extends EventEmitter {
    * @ready
    * @returns {void}
    */
-  _onReady () {
-    this.isReady = true
-    this.emit('ready')
+  _onReady() {
+    this.isReady = true;
+    this.emit("ready");
   }
 
   /**
@@ -92,8 +92,8 @@ module.exports = class Connection extends EventEmitter {
    * @ready
    * @returns {void}
    */
-  _onError (error) {
-    this.emit('error', 'REDIS error:' + error)
+  _onError(error) {
+    this.emit("error", "REDIS error:" + error);
   }
 
   /**
@@ -104,8 +104,8 @@ module.exports = class Connection extends EventEmitter {
    * @ready
    * @returns {void}
    */
-  _onDisconnect (error) {
-    this._onError('disconnected')
+  _onDisconnect(error) {
+    this._onError("disconnected");
   }
 
   /**
@@ -116,12 +116,12 @@ module.exports = class Connection extends EventEmitter {
    * @ready
    * @returns {void}
    */
-  _validateOptions (options) {
+  _validateOptions(options) {
     if (!options) {
-      throw new Error('Missing option \'host\' for redis-connector')
+      throw new Error("Missing option 'host' for redis-connector");
     }
     if (options.nodes && !(options.nodes instanceof Array)) {
-      throw new Error('Option nodes must be an array of connection parameters for cluster')
+      throw new Error("Option nodes must be an array of connection parameters for cluster");
     }
   }
-}
+};

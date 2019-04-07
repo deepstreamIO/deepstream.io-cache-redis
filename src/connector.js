@@ -1,8 +1,8 @@
-'use strict'
+"use strict";
 
-const Connection = require('./connection')
-const pckg = require('../package.json')
-const util = require('util')
+const Connection = require("./connection");
+const pckg = require("../package.json");
+const util = require("util");
 
 /**
  * A [deepstream](http://deepstream.io) cache connector
@@ -18,16 +18,16 @@ const util = require('util')
  * @constructor
  */
 module.exports = class CacheConnector extends Connection {
-  constructor (options) {
-    super(options)
+  constructor(options) {
+    super(options);
 
-    this.name = pckg.name
-    this.version = pckg.version
+    this.name = pckg.name;
+    this.version = pckg.version;
 
     this.flush = this.flush.bind(this);
-    this.sets = new Map()
-    this.gets = new Map()
-    this.deletes = new Map()
+    this.sets = new Map();
+    this.gets = new Map();
+    this.deletes = new Map();
   }
 
   /**
@@ -39,10 +39,10 @@ module.exports = class CacheConnector extends Connection {
    * @public
    * @returns {void}
    */
-  close () {
-    this.client.removeAllListeners('end')
-    this.client.once('end', this.emit.bind(this, 'close'))
-    this.client.quit()
+  close() {
+    this.client.removeAllListeners("end");
+    this.client.once("end", this.emit.bind(this, "close"));
+    this.client.quit();
   }
 
   /**
@@ -55,10 +55,10 @@ module.exports = class CacheConnector extends Connection {
    * @private
    * @returns {void}
    */
-  delete (key, callback) {
+  delete(key, callback) {
     this.sets.delete(key);
-    this.deletes.set(key, callback)
-    this.scheduleFlush()
+    this.deletes.set(key, callback);
+    this.scheduleFlush();
   }
 
   /**
@@ -72,9 +72,9 @@ module.exports = class CacheConnector extends Connection {
    * @private
    * @returns {void}
    */
-  set (key, value, callback) {
-    this.sets.set(key, { value, callback })
-    this.scheduleFlush()
+  set(key, value, callback) {
+    this.sets.set(key, { value, callback });
+    this.scheduleFlush();
   }
 
   /**
@@ -87,31 +87,31 @@ module.exports = class CacheConnector extends Connection {
    * @private
    * @returns {void}
    */
-   get (key, callback) {
-     this.gets.set(key, callback)
-     this.scheduleFlush()
+   get(key, callback) {
+     this.gets.set(key, callback);
+     this.scheduleFlush();
    }
 
-   scheduleFlush () {
+   scheduleFlush() {
      if (!this.timeoutSet) {
        this.timeoutSet = true;
        process.nextTick(this.flush);
      }
    }
 
-  flush () {
+  flush() {
     this.timeoutSet = false;
-    const pipeline = this.client.pipeline()
+    const pipeline = this.client.pipeline();
 
-    const sets = this.sets.entries()
+    const sets = this.sets.entries();
     for (let entry of sets) {
       const key = entry[0];
-      const value = JSON.stringify(entry[1].value)
+      const value = JSON.stringify(entry[1].value);
       const callback = entry[1].callback;
       if (this.options.ttl) {
-        pipeline.setex(key, this.options.ttl, value, callback)
+        pipeline.setex(key, this.options.ttl, value, callback);
       } else {
-        pipeline.set(key, value, callback)
+        pipeline.set(key, value, callback);
       }
     }
     this.sets.clear();
@@ -128,25 +128,25 @@ module.exports = class CacheConnector extends Connection {
       const callback = entry[1];
 
       pipeline.get(key, (error, result) => {
-        let parsedResult
+        let parsedResult;
 
         if (result === null) {
-          callback(error, null)
-          return
+          callback(error, null);
+          return;
         }
 
         try {
-          parsedResult = JSON.parse(result)
+          parsedResult = JSON.parse(result);
         } catch (e) {
-          callback(e)
-          return
+          callback(e);
+          return;
         }
 
-        callback(null, parsedResult)
-      })
+        callback(null, parsedResult);
+      });
     }
     this.gets.clear();
 
     pipeline.exec();
   }
-}
+};
