@@ -21,36 +21,25 @@ services:
   - redis-server
 
 node_js:
-  - "8"
-  - "6.11"
-  - "4"
+  - "10"
 
 matrix:
   include:
-    - node_js: "6.11"
+    - node_js: "10"
       os: osx
+    - node_js: "10"
+      os: linux
 
 script:
   - npm run test
-  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/package.sh
+  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/package-connector.sh
   - chmod 555 package.sh
   - ./package.sh
 
 deploy:
-  - provider: s3
-    access_key_id:
-      secure: "p5r5zh6Jho741XzGWiOmHYKZiF9SOpnZidV7gPrF7zh/schzaci2FWdKv/FndahS8bHD4j/hzIkywwm78MhdAKv8MplWVNG96HT/B04c+NKGb1b0SLxMD/9DmTSOtDYY9Rai9y9S7Z+4Gtyrd35WwCBvbwDvxWn9sdeclxs9cWc="
-    secret_access_key:
-      secure: "REh82HImVCCEdv4vPMUAtVxiZxe+c7G/hEC19vAPlAvY1UPSrOzFUP0KrlyMx0XvNP4KsWnIn2fDp92iso4gZQz0jiyjgKQsyalb6pgh98TiNMIujUASSD6pAQUod71BKpu1Ka769EMBcW1cbeBqkkt4jJlJ6ulGmr5Mf+lQZPU="
-    bucket: ds-server-artifacts
-    skip_cleanup: true
-    acl: public_read
-    local_dir: build
-    upload-dir: $TRAVIS_REPO_SLUG
   - provider: releases
     skip_cleanup: true
-    api_key:
-      secure: "KkukKr/KxJkszXZZRU8PlJnDq09sDgSlmSBPfiRL05iWVDOzQmV9TQOeYGsUulgETq3dZgvLH5PKPitWkcuGiQnew4/OaCuuAV5UwYgufsBWBxwvsJee5Tpi7wLkfZfH9Dozf3ZV91w+1AeDxWzhOlOZwBTpRVtHRIZeBJgtpMQ="
+    api_key: ${GITHUB_TOKEN}
     file_glob: true
     file:
       - "build/*.tar.gz"
@@ -59,7 +48,7 @@ deploy:
       tags: true
 
 after_deploy:
-  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/test.sh
+  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/test-connector.sh
   - chmod 555 test.sh
   - ./test.sh
 

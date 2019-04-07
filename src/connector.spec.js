@@ -2,7 +2,7 @@
 
 /* global describe, expect, it, jasmine */
 const expect = require('chai').expect
-const CacheConnector = require('../src/cache-connector')
+const CacheConnector = require('./connector')
 const EventEmitter = require('events').EventEmitter
 
 const settings = {
@@ -81,27 +81,24 @@ describe('the message connector has the correct structure', () => {
     })
   }).timeout(5000)
 
-  it('sets ALOT of values (as object)', (done) => {
-    const iterations = 70000;
+  it('sets and gets ALOT of values (as object)', (done) => {
+    const iterations = 30000;
     let resultCount = 0;
     for (let i = 0; i < iterations; i++) {
       cacheConnector.set('someValue' + i, { value: i }, (error) => {
         expect(error).to.equal(null)
         resultCount++;
-        if (resultCount === iterations) done();
-      })
-    }
-  }).timeout(10000)
-
-  it('gets ALOT of values (as object)', (done) => {
-    const iterations = 70000;
-    let resultCount = 0;
-    for (let i = 0; i < iterations; i++) {
-      cacheConnector.get('someValue' + i, (error, result) => {
-        expect(error).to.equal(null)
-        expect(result).to.deep.equal({ value: i });
-        resultCount++;
-        if (resultCount === iterations) done();
+        if (resultCount === iterations) {
+          let resultCount = 0;
+          for (let i = 0; i < iterations; i++) {
+            cacheConnector.get('someValue' + i, (error, result) => {
+              expect(error).to.equal(null)
+              expect(result).to.deep.equal({ value: i });
+              resultCount++;
+              if (resultCount === iterations) done();
+            })
+          }
+        };
       })
     }
   }).timeout(10000)
