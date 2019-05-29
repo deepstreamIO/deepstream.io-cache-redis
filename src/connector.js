@@ -56,7 +56,14 @@ module.exports = class CacheConnector extends Connection {
    * @returns {void}
    */
   delete(key, callback) {
+    if (this.sets.has(key)) {
+      console.error(`deepstream-redis-delete: A delete action is already registered for ${key}`)
+    }
     this.sets.delete(key);
+
+    if (this.sets.has(key)) {
+      console.error(`deepstream-redis-delete: A set action is already registered for ${key}`)
+    }
     this.deletes.set(key, callback);
     this.scheduleFlush();
   }
@@ -73,6 +80,10 @@ module.exports = class CacheConnector extends Connection {
    * @returns {void}
    */
   set(key, value, callback) {
+    if (this.sets.has(key)) {
+      console.error(`deepstream-redis-set: A set action is already registered for ${key}`)
+    }
+
     this.sets.set(key, { value, callback });
     this.scheduleFlush();
   }
@@ -88,6 +99,10 @@ module.exports = class CacheConnector extends Connection {
    * @returns {void}
    */
    get(key, callback) {
+    if (this.gets.has(key)) {
+      console.error(`deepstream-redis-get: A set action is already registered for ${key}`)
+    }
+
      this.gets.set(key, callback);
      this.scheduleFlush();
    }
