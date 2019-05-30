@@ -1,3 +1,8 @@
+## [1.2.1] - 2019-05-30
+  
+### Enhancements
+- Adding error logging to capture a potential issue with write acks
+
 ## [1.2.0] - 2018-08-20
   
 ### Enhancements

@@ -28,8 +28,6 @@ module.exports = class CacheConnector extends Connection {
     this.sets = new Map();
     this.gets = new Map();
     this.deletes = new Map();
-
-    console.log('deepstream-redis: using debug version')
   }
 
   /**
