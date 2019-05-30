@@ -1,3 +1,8 @@
+## [1.2.2] - 2019-05-30
+  
+### Fix
+- Correcting index file in package.json
+
 ## [1.2.1] - 2019-05-30
   
 ### Enhancements
