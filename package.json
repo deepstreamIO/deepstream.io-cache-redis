@@ -1,10 +1,13 @@
 {
-  "name": "deepstream.io-cache-redis",
-  "version": "1.2.2",
+  "name": "@deepstream/cache-redis",
+  "version": "2.0.0-rc.2",
   "description": "Redis cache connector for deepstream.io",
-  "main": "src/connector.js",
+  "main": "dist/connector.js",
   "scripts": {
-    "test": "mocha --exit src/",
+    "tsc": "tsc",
+    "lint": "tslint --project .",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "mocha --opts mocha.opts 'src/*.spec.ts'",
     "coverage": "nyc mocha src/",
     "ci": "npm run coverage",
     "docker": "docker start -p 6379:6379 redis"
@@ -23,9 +26,12 @@
     "ioredis": "^4.9.0"
   },
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
     "mocha": "^6.1.0",
-    "nyc": "^13.3.0"
+    "nyc": "^13.3.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.2"
   }
 }
