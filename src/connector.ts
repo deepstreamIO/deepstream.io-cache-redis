@@ -18,9 +18,10 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
   public apiVersion = 2
   public isReady = false
   public description = 'Redis Cache Connector'
-  private buffer: Map<string, {
+  private readBuffer: Map<string, StorageReadCallback> = new Map()
+  private writeBuffer: Map<string, {
     action: 'delete' | 'set' | 'get',
-    callback: StorageReadCallback,
+    callback: StorageWriteCallback,
     version?: number,
     data?: string
   }> = new Map()
@@ -54,10 +55,10 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
    * Deletes an entry from the cache.
    */
   public delete (recordName: string, callback: StorageWriteCallback) {
-    if (this.buffer.has(recordName)) {
-      console.trace(`deepstream-redis-delete: A action is already registered for ${recordName}`)
+    if (this.writeBuffer.has(recordName)) {
+      console.trace(`deepstream-redis: A write action is already registered for ${recordName}`)
     }
-    this.buffer.set(recordName, { action: 'delete', callback })
+    this.writeBuffer.set(recordName, { action: 'delete', callback })
     this.scheduleFlush()
   }
 
@@ -65,11 +66,11 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
    * Writes a value to the cache.
    */
   public set (recordName: string, version: number, data: any, callback: StorageWriteCallback) {
-    if (this.buffer.has(recordName)) {
-      console.trace(`deepstream-redis-delete: A action is already registered for ${recordName}`)
+    if (this.writeBuffer.has(recordName)) {
+      console.trace(`deepstream-redis: A write action is already registered for ${recordName}`)
     }
 
-    this.buffer.set(recordName, { action: 'set', callback, version, data })
+    this.writeBuffer.set(recordName, { action: 'set', callback, version, data })
     this.scheduleFlush()
   }
 
@@ -77,11 +78,11 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
    * Retrieves a value from the cache
    */
    public get (key: string, callback: StorageReadCallback) {
-    if (this.buffer.has(key)) {
-      console.trace(`deepstream-redis-get: A action is already registered for ${key}`)
+    if (this.writeBuffer.has(key)) {
+      console.log(`deepstream-redis: A write action is registered for ${key}`)
     }
 
-    this.buffer.set(key, { action: 'get', callback })
+    this.readBuffer.set(key, callback)
     this.scheduleFlush()
    }
 
@@ -96,8 +97,7 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
     this.timeoutSet = false
     const pipeline = this.connection.client.pipeline()
 
-    const actions = this.buffer.entries()
-    for (const [recordName, { callback, action, version, data }] of actions) {
+    for (const [recordName, { callback, action, version, data }] of this.writeBuffer.entries()) {
       switch (action) {
         case 'set':
           const value = JSON.stringify({ _v: version, _d: data })
@@ -110,28 +110,38 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
         case 'delete':
           pipeline.del(recordName, callback as any)
           break
-        case 'get':
-          pipeline.get(recordName, (error, result) => {
-            let parsedResult
-
-            if (result === null || error) {
-                callback(error ? error.toString() : null, -1, null)
-                return
-              }
-
-            try {
-              parsedResult = JSON.parse(result)
-            } catch (e) {
-              callback(e.message)
-              return
-            }
-
-            callback(null, parsedResult._v, parsedResult._d)
-          })
-          break
       }
     }
-    this.buffer.clear()
+    this.writeBuffer.clear()
+
+    for (const [recordName, callback] of this.readBuffer.entries()) {
+    pipeline.get(recordName, (error, result) => {
+      let parsedResult
+
+      if (error) {
+        callback(error.toString())
+        return
+      }
+
+      if (!result) {
+        callback(null, -1, null)
+        return
+      }
+
+      try {
+        parsedResult = JSON.parse(result)
+      } catch (e) {
+        callback(e.message)
+        return
+      }
+
+      callback(null, parsedResult._v, parsedResult._d)
+    })
+    }
+    this.readBuffer.clear()
+
     pipeline.exec()
   }
 }
+
+export default CacheConnector
