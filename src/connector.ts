@@ -20,7 +20,7 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
   public description = 'Redis Cache Connector'
   private readBuffer: Map<string, StorageReadCallback> = new Map()
   private writeBuffer: Map<string, {
-    action: 'delete' | 'set' | 'get',
+    action: 'delete' | 'set',
     callback: StorageWriteCallback,
     version?: number,
     data?: string
