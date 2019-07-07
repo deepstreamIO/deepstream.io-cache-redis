@@ -126,7 +126,7 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
             pipeline.mset({
               [`${recordName}_v`]: version,
               [`${recordName}_d`]: JSON.stringify(data)
-            })
+            }, callback)
           }
           break
         case 'delete':
