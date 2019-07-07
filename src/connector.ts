@@ -1,5 +1,5 @@
 import { Connection } from './connection'
-import { DeepstreamPlugin, StorageWriteCallback, StorageReadCallback, Storage } from './types'
+import { DeepstreamPlugin, StorageWriteCallback, StorageReadCallback, Storage, StorageHeadBulkCallback } from './types'
 
 /**
  * A [deepstream](http://deepstream.io) cache connector
@@ -45,9 +45,24 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
     await this.connection.close()
   }
 
+  public headBulk (recordNames: string[], callback: StorageHeadBulkCallback): void {
+    (this.connection.client as any).mget(recordNames.map(name => `${name}_v`) as any, (error: any, result: any) => {
+      const r = recordNames.reduce((v, name, index) => {
+        if (result[index] !== null) {
+          v.v[name] = result[index]
+        } else {
+          v.m.push(name)
+        }
+        return v
+      }, { v: {}, m: []} as any)
+      callback(error, r.v, r.m)
+    })
+  }
+
   public deleteBulk (recordNames: string[], callback: StorageWriteCallback): void {
     const pipeline = this.connection.client.pipeline()
-    recordNames.forEach((recordName) => pipeline.del(recordName))
+    pipeline.del(recordNames.map(name => `${name}_v`) as any)
+    pipeline.del(recordNames.map(name => `${name}_d`) as any)
     pipeline.exec(callback as any)
   }
 
@@ -87,6 +102,10 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
    }
 
    public scheduleFlush () {
+     if (this.readBuffer.size + this.writeBuffer.size > 1000) {
+       this.flush()
+       return
+     }
      if (!this.timeoutSet) {
        this.timeoutSet = true
        process.nextTick(this.flush)
@@ -100,42 +119,36 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
     for (const [recordName, { callback, action, version, data }] of this.writeBuffer.entries()) {
       switch (action) {
         case 'set':
-          const value = JSON.stringify({ _v: version, _d: data })
           if (this.pluginOptions.ttl) {
-            pipeline.setex(recordName, this.pluginOptions.ttl, value, callback as any)
+            pipeline.setex(`${recordName}_v`, this.pluginOptions.ttl, version)
+            pipeline.setex(`${recordName}_d`, this.pluginOptions.ttl, JSON.stringify(data), callback as any)
           } else {
-            pipeline.set(recordName, value, callback as any)
+            pipeline.mset({
+              [`${recordName}_v`]: version,
+              [`${recordName}_d`]: JSON.stringify(data)
+            })
           }
           break
         case 'delete':
-          pipeline.del(recordName, callback as any)
+          (pipeline as any).del([`${recordName}_v`, `${recordName}_d`], callback as any)
           break
       }
     }
     this.writeBuffer.clear()
 
     for (const [recordName, callback] of this.readBuffer.entries()) {
-    pipeline.get(recordName, (error, result) => {
-      let parsedResult
-
+    (pipeline as any).mget([`${recordName}_v`, `${recordName}_d`], (error: any, result: any) => {
       if (error) {
         callback(error.toString())
         return
       }
 
-      if (!result) {
+      if (!result[0]) {
         callback(null, -1, null)
         return
       }
 
-      try {
-        parsedResult = JSON.parse(result)
-      } catch (e) {
-        callback(e.message)
-        return
-      }
-
-      callback(null, parsedResult._v, parsedResult._d)
+      callback(null, Number(result[0]), JSON.parse(result[1]))
     })
     }
     this.readBuffer.clear()

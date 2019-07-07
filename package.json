@@ -26,6 +26,7 @@
     "ioredis": "^4.9.0"
   },
   "devDependencies": {
+    "@types/ioredis": "^4.0.12",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
