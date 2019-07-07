@@ -1,6 +1,6 @@
 {
   "name": "@deepstream/cache-redis",
-  "version": "2.0.0-rc.5",
+  "version": "2.0.0-rc.6",
   "description": "Redis cache connector for deepstream.io",
   "main": "dist/connector.js",
   "scripts": {
