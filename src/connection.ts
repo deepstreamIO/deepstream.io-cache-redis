@@ -62,7 +62,10 @@ export class Connection {
 
   public whenReady () {
     if (!this.isReady) {
-      return new Promise((resolve) => this.emitter.once('ready', resolve))
+      return new Promise((resolve, reject) => {
+        this.emitter.once('ready', resolve)
+        this.emitter.once('error', reject)
+      })
     }
   }
 
@@ -95,7 +98,7 @@ export class Connection {
    * Generic error callback
    */
   public _onError (error: string) {
-    // this.emit('error', `REDIS error: ${error}`)
+    this.emitter.emit('error', `REDIS error: ${error}`)
   }
 
   /**

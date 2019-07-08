@@ -49,7 +49,7 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
     (this.connection.client as any).mget(recordNames.map(name => `${name}_v`) as any, (error: any, result: any) => {
       const r = recordNames.reduce((v, name, index) => {
         if (result[index] !== null) {
-          v.v[name] = result[index]
+          v.v[name] = Number(result[index])
         } else {
           v.m.push(name)
         }
@@ -102,7 +102,7 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
    }
 
    public scheduleFlush () {
-     if (this.readBuffer.size + this.writeBuffer.size > 1000) {
+     if (this.readBuffer.size + this.writeBuffer.size > 5000) {
        this.flush()
        return
      }
