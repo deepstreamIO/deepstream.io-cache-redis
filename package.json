@@ -1,8 +1,8 @@
 {
   "name": "@deepstream/cache-redis",
-  "version": "2.0.0-rc.9",
+  "version": "2.0.0-rc.11",
   "description": "Redis cache connector for deepstream.io",
-  "main": "dist/src/onnector.js",
+  "main": "dist/src/connector.js",
   "scripts": {
     "tsc": "tsc",
     "lint": "tslint --project .",
