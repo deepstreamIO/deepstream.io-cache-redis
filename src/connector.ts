@@ -1,5 +1,6 @@
 import { Connection } from './connection'
 import { DeepstreamPlugin, StorageWriteCallback, StorageReadCallback, Storage, StorageHeadBulkCallback } from './types'
+import * as pkg from '../package.json'
 
 /**
  * A [deepstream](http://deepstream.io) cache connector
@@ -17,7 +18,7 @@ import { DeepstreamPlugin, StorageWriteCallback, StorageReadCallback, Storage, S
 export class CacheConnector extends DeepstreamPlugin implements Storage {
   public apiVersion = 2
   public isReady = false
-  public description = 'Redis Cache Connector'
+  public description = `Redis Cache Connector ${pkg.version}`
   private readBuffer: Map<string, StorageReadCallback> = new Map()
   private writeBuffer: Map<string, {
     action: 'delete' | 'set',
