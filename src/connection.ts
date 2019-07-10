@@ -41,7 +41,7 @@ export class Connection {
   private emitter = new EventEmitter()
   public client: Redis.Redis
 
-  constructor (protected options: any) {
+  constructor (options: any, private logger: any) {
     this._validateOptions(options)
     // See https://github.com/luin/ioredis/wiki/Improve-Performance
 
@@ -62,10 +62,7 @@ export class Connection {
 
   public whenReady () {
     if (!this.isReady) {
-      return new Promise((resolve, reject) => {
-        this.emitter.once('ready', resolve)
-        this.emitter.once('error', reject)
-      })
+      return new Promise(resolve => this.emitter.once('ready', resolve))
     }
   }
 
@@ -98,7 +95,7 @@ export class Connection {
    * Generic error callback
    */
   public _onError (error: string) {
-    this.emitter.emit('error', `REDIS error: ${error}`)
+    this.logger.fatal('REDIS_CONNECTION_ERROR', `REDIS error: ${error}`)
   }
 
   /**
@@ -113,10 +110,10 @@ export class Connection {
    */
   public _validateOptions (options: any) {
     if (!options) {
-      throw new Error("Missing option 'host' for redis-connector")
+      this.logger.fatal('PLUGIN_INITIALIZATION_ERROR', "Missing option 'host' for redis-connector")
     }
     if (options.nodes && !(options.nodes instanceof Array)) {
-      throw new Error('Option nodes must be an array of connection parameters for cluster')
+      this.logger.fatal('PLUGIN_INITIALIZATION_ERROR', 'Option nodes must be an array of connection parameters for cluster')
     }
   }
 }

@@ -1,7 +1,5 @@
-import { EventEmitter } from 'events'
 
-export abstract class DeepstreamPlugin extends EventEmitter {
-public isReady: boolean = true
+export abstract class DeepstreamPlugin {
 public abstract description: string
 public init? (): void
 public async whenReady (): Promise<void> {}

@@ -1,5 +1,4 @@
 import { expect } from 'chai'
-import { EventEmitter } from 'events'
 import { CacheConnector } from './connector'
 
 const settings = {
@@ -12,7 +11,13 @@ describe('the message connector has the correct structure', () => {
   let cacheConnector: CacheConnector
 
   before('creates the cacheConnector', async () => {
-    cacheConnector = new CacheConnector(settings, {}, {})
+    cacheConnector = new CacheConnector(settings, { logger: {
+      getNameSpace: () => ({
+        fatal: (e: any, m: any) => {
+          console.error('Fatal exception', e, m)
+        }
+      })
+    }}, {})
     expect(cacheConnector.isReady).to.equal(false)
     await cacheConnector.whenReady()
   })
@@ -24,7 +29,6 @@ describe('the message connector has the correct structure', () => {
     expect(typeof cacheConnector.get).to.equal('function')
     expect(typeof cacheConnector.set).to.equal('function')
     expect(typeof cacheConnector.delete).to.equal('function')
-    expect(cacheConnector instanceof EventEmitter).to.equal(true)
   })
 
   it('retrieves a non existing value', (done) => {

@@ -28,11 +28,12 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
   }> = new Map()
   private timeoutSet: boolean = false
   private connection: Connection
+  private logger = this.services.logger.getNameSpace('REDIS_CACHE')
 
-  constructor (private pluginOptions: any, services: any, deepstreamConfig: any) {
+  constructor (private pluginOptions: any, private services: any, deepstreamConfig: any) {
     super()
     this.flush = this.flush.bind(this)
-    this.connection = new Connection(pluginOptions)
+    this.connection = new Connection(pluginOptions, this.logger)
   }
 
   public async whenReady () {
