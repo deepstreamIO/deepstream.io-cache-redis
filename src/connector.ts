@@ -1,6 +1,6 @@
 import { Connection } from './connection'
-import { DeepstreamPlugin, StorageWriteCallback, StorageReadCallback, Storage, StorageHeadBulkCallback } from './types'
 import * as pkg from '../package.json'
+import { DeepstreamPlugin, DeepstreamCache, StorageReadCallback, StorageWriteCallback, StorageHeadBulkCallback, StorageHeadCallback } from '@deepstream/types'
 
 /**
  * A [deepstream](http://deepstream.io) cache connector
@@ -15,7 +15,7 @@ import * as pkg from '../package.json'
  *
  * @constructor
  */
-export class CacheConnector extends DeepstreamPlugin implements Storage {
+export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache {
   public apiVersion = 2
   public isReady = false
   public description = `Redis Cache Connector ${pkg.version}`
@@ -59,6 +59,10 @@ export class CacheConnector extends DeepstreamPlugin implements Storage {
       }, { v: {}, m: []} as any)
       callback(error, r.v, r.m)
     })
+  }
+
+  public head (recordName: string, callback: StorageHeadCallback): void {
+    throw new Error('Head is not yet required by deepstream.')
   }
 
   public deleteBulk (recordNames: string[], callback: StorageWriteCallback): void {

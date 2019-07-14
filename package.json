@@ -26,6 +26,7 @@
     "ioredis": "^4.9.0"
   },
   "devDependencies": {
+    "@deepstream/types": "^1.0.0-rc.1",
     "@types/ioredis": "^4.0.12",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
