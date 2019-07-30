@@ -11,14 +11,6 @@ env:
 language: node_js
 dist: xenial
 
-addons:
-  apt:
-    sources:
-      - ppa:chris-lea/redis-server
-    packages:
-      - redis-tools
-      - redis-server
-
 services:
   - redis
 
