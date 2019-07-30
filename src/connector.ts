@@ -16,7 +16,6 @@ import { DeepstreamPlugin, DeepstreamCache, StorageReadCallback, StorageWriteCal
  * @constructor
  */
 export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache {
-  public apiVersion = 2
   public isReady = false
   public description = `Redis Cache Connector ${pkg.version}`
   private readBuffer: Map<string, StorageReadCallback> = new Map()

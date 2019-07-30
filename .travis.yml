@@ -32,7 +32,8 @@ matrix:
 
 script:
   - npm run test
-  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/v4/scripts/connector/package-connector.sh
+  - npm run tsc
+  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/master/scripts/connector/package-connector.sh
   - chmod 555 package.sh
   - ./package.sh
 
@@ -42,15 +43,22 @@ deploy:
     api_key: ${GITHUB_TOKEN}
     file_glob: true
     file:
-      - "build/*.tar.gz"
-      - "build/*.zip"
+      - "build/*/*.tar.gz"
+      - "build/*/*.zip"
     on:
       tags: true
+  - provider: npm
+    email: "info@deepstream.io"
+    api_key: ${NPM_TOKEN}
+    skip_cleanup: true
+    on:
+      tags: true
+      node_js: '10'
+      condition: $TRAVIS_OS_NAME = linux
 
 after_deploy:
-  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/v4/scripts/connector/test-connector.sh
-  - chmod 555 test.sh
-  - ./test.sh
+  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/master/scripts/connector/test-connector.sh
+  - bash ./test.sh
 
 after_script:
   - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"

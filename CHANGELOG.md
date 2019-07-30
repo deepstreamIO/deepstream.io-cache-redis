@@ -1,3 +1,9 @@
+## [2.0.0] - 2019-07-30
+
+### Feature
+
+Using the new V4 API, allowing versions to be stored seperately from the data for faster withdrawal times.
+
 ## [1.2.2] - 2019-05-30
   
 ### Fix
