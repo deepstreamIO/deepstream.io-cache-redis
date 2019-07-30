@@ -1,5 +1,5 @@
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew update   ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew update --force ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew install redis  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then redis-server --daemonize yes ; fi
 
