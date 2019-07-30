@@ -34,6 +34,7 @@ deploy:
     auth_token: ${GITHUB_TOKEN}
     artifact: 'deepstream.io-connector'
     draft: false
+    force_update: true
     on:
       appveyor_repo_tag: true
 
