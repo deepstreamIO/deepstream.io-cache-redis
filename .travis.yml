@@ -9,16 +9,18 @@ env:
 
 # Do not insert any code under here without making sures it's in publishingtest first
 language: node_js
+dist: xenial
 
-plugins:
+addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
+      - ppa:chris-lea/redis-server
     packages:
-    - g++-4.8
+      - redis-tools
+      - redis-server
 
 services:
-  - redis-server
+  - redis
 
 node_js:
   - "10"
