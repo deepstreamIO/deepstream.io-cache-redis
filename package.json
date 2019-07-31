@@ -1,6 +1,6 @@
 {
   "name": "@deepstream/cache-redis",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Redis cache connector for deepstream.io",
   "main": "dist/src/connector.js",
   "scripts": {
@@ -23,10 +23,10 @@
   },
   "homepage": "http://deepstream.io",
   "dependencies": {
+    "@deepstream/types": "^1.0.1",
     "ioredis": "^4.9.0"
   },
   "devDependencies": {
-    "@deepstream/types": "^1.0.0",
     "@types/chai": "^4.1.7",
     "@types/ioredis": "^4.0.12",
     "@types/mocha": "^5.2.7",

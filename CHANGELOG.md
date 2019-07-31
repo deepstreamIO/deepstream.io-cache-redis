@@ -1,3 +1,9 @@
+## [2.0.1] - 2019-07-31
+
+### Fix
+
+Depend on @deepstream/types that doesn't have protobuf and ts-essentials as a production dependency
+
 ## [2.0.0] - 2019-07-30
 
 ### Feature
