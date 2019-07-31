@@ -1,3 +1,9 @@
+## [2.0.2] - 2019-07-31
+
+### Fix
+
+Depend on @deepstream/protobuf as a dev dependency since it includes types needed by typescript
+
 ## [2.0.1] - 2019-07-31
 
 ### Fix
@@ -11,17 +17,17 @@ Depend on @deepstream/types that doesn't have protobuf and ts-essentials as a pr
 Using the new V4 API, allowing versions to be stored seperately from the data for faster withdrawal times.
 
 ## [1.2.2] - 2019-05-30
-  
+
 ### Fix
 - Correcting index file in package.json
 
 ## [1.2.1] - 2019-05-30
-  
+
 ### Enhancements
 - Adding error logging to capture a potential issue with write acks
 
 ## [1.2.0] - 2018-08-20
-  
+
 ### Enhancements
 - Using pipeline to speedup reads and writes (at a risk of too much GC that node 10 should fix!)
 
