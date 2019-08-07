@@ -15,7 +15,8 @@ describe('the message connector has the correct structure', () => {
       getNameSpace: () => ({
         fatal: (e: any, m: any) => {
           console.error('Fatal exception', e, m)
-        }
+        },
+        warn: () => {}
       })
     }}, {})
     expect(cacheConnector.isReady).to.equal(false)
@@ -45,6 +46,20 @@ describe('the message connector has the correct structure', () => {
       expect(error).to.equal(null)
       done()
     })
+  })
+
+  it('retrieves an existing value multiple times', (done) => {
+    const results: any[] = []
+    const callback = (...args: any[]) => results.push(args)
+
+    cacheConnector.get('someValue', callback)
+    cacheConnector.get('someValue', callback)
+    cacheConnector.get('someValue', callback)
+
+    setTimeout(() => {
+      expect(results.length).to.equal(3)
+      done()
+    }, 60)
   })
 
   it('retrieves an existing value', (done) => {

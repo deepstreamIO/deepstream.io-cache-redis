@@ -1,6 +1,6 @@
 import { Connection } from './connection'
 import * as pkg from '../package.json'
-import { DeepstreamPlugin, DeepstreamCache, StorageReadCallback, StorageWriteCallback, StorageHeadBulkCallback, StorageHeadCallback } from '@deepstream/types'
+import { DeepstreamPlugin, DeepstreamCache, StorageReadCallback, StorageWriteCallback, StorageHeadBulkCallback, StorageHeadCallback, EVENT } from '@deepstream/types'
 
 /**
  * A [deepstream](http://deepstream.io) cache connector
@@ -18,7 +18,7 @@ import { DeepstreamPlugin, DeepstreamCache, StorageReadCallback, StorageWriteCal
 export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache {
   public isReady = false
   public description = `Redis Cache Connector ${pkg.version}`
-  private readBuffer: Map<string, StorageReadCallback> = new Map()
+  private readBuffer: Map<string, StorageReadCallback[] | StorageReadCallback> = new Map()
   private writeBuffer: Map<string, {
     action: 'delete' | 'set',
     callback: StorageWriteCallback,
@@ -47,7 +47,7 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
   }
 
   public headBulk (recordNames: string[], callback: StorageHeadBulkCallback): void {
-    (this.connection.client as any).mget(recordNames.map(name => `${name}_v`) as any, (error: any, result: any) => {
+    (this.connection.client as any).mget(recordNames.map((name) => `${name}_v`) as any, (error: any, result: any) => {
       const r = recordNames.reduce((v, name, index) => {
         if (result[index] !== null) {
           v.v[name] = Number(result[index])
@@ -66,8 +66,8 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
 
   public deleteBulk (recordNames: string[], callback: StorageWriteCallback): void {
     const pipeline = this.connection.client.pipeline()
-    pipeline.del(recordNames.map(name => `${name}_v`) as any)
-    pipeline.del(recordNames.map(name => `${name}_d`) as any)
+    pipeline.del(recordNames.map((name) => `${name}_v`) as any)
+    pipeline.del(recordNames.map((name) => `${name}_d`) as any)
     pipeline.exec(callback as any)
   }
 
@@ -102,7 +102,15 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
       console.log(`deepstream-redis: A write action is registered for ${key}`)
     }
 
-    this.readBuffer.set(key, callback)
+    const callbacks = this.readBuffer.get(key)
+    if (!callbacks) {
+      this.readBuffer.set(key, callback)
+    } else if (typeof callbacks === 'function') {
+      this.logger.warn('MULTIPLE_CACHE_GETS', `Multiple cache gets for record ${key}`, { recordName: key })
+      this.readBuffer.set(key, [callbacks, callback])
+    } else {
+      callbacks.push(callback)
+    }
     this.scheduleFlush()
    }
 
@@ -141,24 +149,32 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
     }
     this.writeBuffer.clear()
 
-    for (const [recordName, callback] of this.readBuffer.entries()) {
+    for (const [recordName, callbacks] of this.readBuffer.entries()) {
     (pipeline as any).mget([`${recordName}_v`, `${recordName}_d`], (error: any, result: any) => {
-      if (error) {
-        callback(error.toString())
-        return
+      if (typeof callbacks === 'function') {
+        this.readCallback(callbacks, error, result)
+      } else {
+        callbacks.forEach((callback) => this.readCallback(callback, error, result))
       }
-
-      if (!result[0]) {
-        callback(null, -1, null)
-        return
-      }
-
-      callback(null, Number(result[0]), JSON.parse(result[1]))
     })
     }
     this.readBuffer.clear()
 
     pipeline.exec()
+  }
+
+  private readCallback (callback: StorageReadCallback, error: any, result: any) {
+    if (error) {
+      callback(error.toString())
+      return
+    }
+
+    if (!result[0]) {
+      callback(null, -1, null)
+      return
+    }
+
+    callback(null, Number(result[0]), JSON.parse(result[1]))
   }
 }
 

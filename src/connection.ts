@@ -62,7 +62,7 @@ export class Connection {
 
   public whenReady () {
     if (!this.isReady) {
-      return new Promise(resolve => this.emitter.once('ready', resolve))
+      return new Promise((resolve) => this.emitter.once('ready', resolve))
     }
   }
 
