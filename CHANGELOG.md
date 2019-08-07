@@ -1,3 +1,9 @@
+## [2.0.3] - 2019-08-07
+  
+### Fix
+
+Allow multiple gets, although display a warning since it shouldn't happen normally
+
 ## [2.0.2] - 2019-07-31
 
 ### Fix

@@ -1,6 +1,6 @@
 import { Connection } from './connection'
 import * as pkg from '../package.json'
-import { DeepstreamPlugin, DeepstreamCache, StorageReadCallback, StorageWriteCallback, StorageHeadBulkCallback, StorageHeadCallback, EVENT } from '@deepstream/types'
+import { DeepstreamPlugin, DeepstreamCache, StorageReadCallback, StorageWriteCallback, StorageHeadBulkCallback, StorageHeadCallback } from '@deepstream/types'
 
 /**
  * A [deepstream](http://deepstream.io) cache connector
