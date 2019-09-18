@@ -23,20 +23,20 @@
   },
   "homepage": "http://deepstream.io",
   "dependencies": {
-    "@deepstream/types": "^1.0.2",
-    "ioredis": "^4.14.0"
+    "@deepstream/types": "^1.0.3",
+    "ioredis": "^4.14.1"
   },
   "devDependencies": {
     "@deepstream/protobuf": "^1.0.1",
-    "@types/chai": "^4.1.7",
-    "@types/ioredis": "^4.0.12",
+    "@types/chai": "^4.2.3",
+    "@types/ioredis": "^4.0.17",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "coveralls": "^3.0.6",
     "mocha": "^6.2.0",
     "nyc": "^13.3.0",
-    "ts-node": "^8.3.0",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.2"
+    "ts-node": "^8.4.1",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
   }
 }
