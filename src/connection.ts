@@ -45,6 +45,12 @@ export class Connection {
     this._validateOptions(options)
     // See https://github.com/luin/ioredis/wiki/Improve-Performance
 
+    if (options.url) {
+      const [host, port] = options.url.split(':')
+      options.host = host
+      options.port = port
+    }
+
     if (options.nodes instanceof Array) {
       options.redisOptions.dropBufferSupport = true
       const nodes = options.nodes
