@@ -1,3 +1,9 @@
+## [2.0.5] - 2019-10-02
+
+### Improvement
+
+Parse url using url module rather than string manipulation
+
 ## [2.0.4] - 2019-09-19
   
 ### Improvement
