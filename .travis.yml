@@ -1,8 +1,3 @@
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew update --force ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew install redis  ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then redis-server --daemonize yes ; fi
-
 env:
   global:
     - CXX=g++-4.8
@@ -17,30 +12,10 @@ services:
 node_js:
   - "10"
 
-matrix:
-  include:
-    - node_js: "10"
-      os: osx
-    - node_js: "10"
-      os: linux
-
 script:
-  - npm run test
-  - npm run tsc
-  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/master/scripts/connector/package-connector.sh
-  - chmod 555 package.sh
-  - ./package.sh
+  - npm run ci
 
 deploy:
-  - provider: releases
-    skip_cleanup: true
-    api_key: ${GITHUB_TOKEN}
-    file_glob: true
-    file:
-      - "build/*/*.tar.gz"
-      - "build/*/*.zip"
-    on:
-      tags: true
   - provider: npm
     email: "info@deepstream.io"
     api_key: ${NPM_TOKEN}

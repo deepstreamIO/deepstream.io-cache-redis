@@ -1,19 +1,17 @@
 import { expect } from 'chai'
-import { CacheConnector } from './connector'
-
-const settings = {
-  port: process.env.REDIS_PORT || 6379,
-  host: process.env.REDIS_HOST || 'localhost',
-  ttl: 2,
-}
+import { CacheConnector } from '../src/connector'
+import { config } from './connection-params'
 
 describe('the message connector has the correct structure', () => {
   let cacheConnector: CacheConnector
 
   before('creates the cacheConnector', async () => {
-    cacheConnector = new CacheConnector(settings, { logger: {
+    cacheConnector = new CacheConnector(config, { logger: {
+      // @ts-ignore
       getNameSpace: () => ({
+        // @ts-ignore
         fatal: (e: any, m: any) => {
+          // @ts-ignore
           console.error('Fatal exception', e, m)
         },
         warn: () => {}

@@ -1,6 +1,6 @@
 import { Connection } from './connection'
 import * as pkg from '../package.json'
-import { DeepstreamPlugin, DeepstreamCache, StorageReadCallback, StorageWriteCallback, StorageHeadBulkCallback, StorageHeadCallback } from '@deepstream/types'
+import { DeepstreamPlugin, DeepstreamCache, StorageReadCallback, StorageWriteCallback, StorageHeadBulkCallback, StorageHeadCallback, DeepstreamConfig, DeepstreamServices } from '@deepstream/types'
 
 /**
  * A [deepstream](http://deepstream.io) cache connector
@@ -29,7 +29,7 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
   private connection: Connection
   private logger = this.services.logger.getNameSpace('REDIS_CACHE')
 
-  constructor (private pluginOptions: any, private services: any, deepstreamConfig: any) {
+  constructor (private pluginOptions: any, private services: DeepstreamServices, deepstreamConfig: DeepstreamConfig) {
     super()
     this.flush = this.flush.bind(this)
     this.connection = new Connection(pluginOptions, this.logger)
