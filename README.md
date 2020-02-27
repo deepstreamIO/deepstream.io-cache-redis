@@ -28,3 +28,18 @@ server.set( 'cache', new RedisCacheConnector( {
 
 server.start();
 ```
+
+## Basic Setup with TLS support
+If you need to establish the redis connection via tls, set the `tls` option:
+```yaml
+plugins:
+  cache:
+    name: redis
+    options:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      db: ${REDIS_DB_INDEX} // optional
+      ttl: 86400 // optional time to live in seconds
+      tls: {}
+```
+
