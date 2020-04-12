@@ -51,6 +51,7 @@ workflows:
               tags:
                 only: /^v.*/
         - deploy:
+            context: connectors
             requires:
               - build-and-test
             filters:
