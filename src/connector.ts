@@ -133,13 +133,13 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
       switch (action) {
         case 'set':
           if (this.pluginOptions.ttl) {
-            pipeline.setex(`${recordName}_v`, this.pluginOptions.ttl, version)
+            pipeline.setex(`${recordName}_v`, this.pluginOptions.ttl, version!)
             pipeline.setex(`${recordName}_d`, this.pluginOptions.ttl, JSON.stringify(data), callback as any)
           } else {
             pipeline.mset({
-              [`${recordName}_v`]: version,
+              [`${recordName}_v`]: version!,
               [`${recordName}_d`]: JSON.stringify(data)
-            }, callback)
+            }, callback as (error: Error | null) => {})
           }
           break
         case 'delete':

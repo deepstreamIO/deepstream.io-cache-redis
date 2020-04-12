@@ -2,7 +2,6 @@ env:
   global:
     - CXX=g++-4.8
 
-# Do not insert any code under here without making sures it's in publishingtest first
 language: node_js
 dist: xenial
 
@@ -23,11 +22,6 @@ deploy:
     on:
       tags: true
       node_js: '10'
-      condition: $TRAVIS_OS_NAME = linux
-
-after_deploy:
-  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/master/scripts/connector/test-connector.sh
-  - bash ./test.sh
 
 after_script:
   - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
