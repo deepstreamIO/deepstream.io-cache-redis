@@ -1,7 +1,9 @@
 version: 2.1
+
 orbs:
   node: circleci/node@1.1.6
   coveralls: coveralls/coveralls@1.0.4
+
 jobs:
   build-and-test:
     docker:
@@ -22,7 +24,31 @@ jobs:
             - run: npm install
             - run: npm run ci
       - coveralls/upload
+
+  deploy:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run: npm install
+            - run: npm run tsc
+      - run:
+          name: Publish to NPM
+          command: | 
+            npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+            npm publish
+
 workflows:
     build-and-test:
       jobs:
         - build-and-test
+        - deploy:
+            requires:
+              - build-and-test
+            filters:
+              tags:
+                only: /^v.*/
+              branches:
+                ignore: /.*/
