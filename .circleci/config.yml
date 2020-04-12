@@ -46,7 +46,10 @@ jobs:
 workflows:
     build-and-test:
       jobs:
-        - build-and-test
+        - build-and-test:
+            filters: 
+              tags:
+                only: /^v.*/
         - deploy:
             requires:
               - build-and-test
