@@ -9,6 +9,7 @@ jobs:
     docker:
       - image: circleci/node:lts
       - image: redis:alpine
+    working_directory: ~/circleci-build
     steps:
       - checkout
       - run:
@@ -23,17 +24,19 @@ jobs:
           steps:
             - run: npm install
             - run: npm run ci
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - circleci-build
       - coveralls/upload
 
   deploy:
     docker:
       - image: circleci/node:lts
+    working_directory: ~/circleci-build
     steps:
-      - checkout
-      - node/with-cache:
-          steps:
-            - run: npm install
-            - run: npm run tsc
+      - attach_workspace:
+          at: /home/circleci
       - run:
           name: Publish to NPM
           command: | 
