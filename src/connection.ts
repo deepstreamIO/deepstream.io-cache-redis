@@ -1,7 +1,7 @@
 import * as Redis from 'ioredis'
 import { Cluster } from 'ioredis'
 import { EventEmitter } from 'events'
-import * as url from 'url'
+import { URL} from 'url'
 
 /**
  * Generic connection to Redis. Can be extended or
@@ -47,9 +47,10 @@ export class Connection {
     // See https://github.com/luin/ioredis/wiki/Improve-Performance
 
     if (options.url) {
-      const REDIS_URL = url.parse(options.url)
+      const REDIS_URL = new URL(options.url)
       options.host = REDIS_URL.hostname
       options.port = REDIS_URL.port
+      options.password = REDIS_URL.password
     }
 
     if (options.nodes instanceof Array) {
