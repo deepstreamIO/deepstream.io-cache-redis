@@ -1,3 +1,9 @@
+## [2.0.9] - 2020-04-24
+
+### Fix
+
+- When specifying url options password is just ignored (@scorpp)
+
 ## [2.0.8] - 2020-04-12
 
 ### Improvement
