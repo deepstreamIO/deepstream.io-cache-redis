@@ -4,42 +4,39 @@
 
 This connector uses [the npm redis package](https://www.npmjs.com/package/ioredis). Please have a look there for detailed options.
 
+## Installation
+**npm**
+```
+npm install @deepstream/cache-redis
+```
+**yarn**
+```
+yarn add @deepstream/cache-redis
+```
+
 ## Basic Setup
+`config.yml`
 ```yaml
-plugins:
-  cache:
-    name: redis
-    options:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      db: ${REDIS_DB_INDEX} // optional
-      ttl: 86400 // optional time to live in seconds
+cache:
+  name: redis
+  options:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    db: ${REDIS_DB_INDEX} // optional
+    ttl: 86400 // optional time to live in seconds
 ```
 
-```javascript
-var Deepstream = require( 'deepstream.io' ),
-    RedisCacheConnector = require( 'deepstream.io-cache-redis' ),
-    server = new Deepstream();
-
-server.set( 'cache', new RedisCacheConnector( {
-  port: 6379,
-  host: 'localhost'
-}));
-
-server.start();
-```
 
 ## Basic Setup with TLS support
 If you need to establish the redis connection via tls, set the `tls` option:
 ```yaml
-plugins:
-  cache:
-    name: redis
-    options:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      db: ${REDIS_DB_INDEX} // optional
-      ttl: 86400 // optional time to live in seconds
-      tls: {}
+cache:
+  name: redis
+  options:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    db: ${REDIS_DB_INDEX} // optional
+    ttl: 86400 // optional time to live in seconds
+    tls: {}
 ```
 
