@@ -1,3 +1,10 @@
+## [2.1.0] - 2025-09-30
+
+### Task
+
+- Implement head method
+- update deps
+
 ## [2.0.9] - 2020-04-24
 
 ### Fix
@@ -30,14 +37,14 @@ Updating dependencies
 Parse url using url module rather than string manipulation
 
 ## [2.0.4] - 2019-09-19
-  
+
 ### Improvement
 
 Allow users to provide a url option rather than the host and port in the format: `host:port`. Useful
 for some environments like convox that inject it automatically.
 
 ## [2.0.3] - 2019-08-07
-  
+
 ### Fix
 
 Allow multiple gets, although display a warning since it shouldn't happen normally
