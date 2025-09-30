@@ -29,24 +29,24 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
   private connection: Connection
   private logger = this.services.logger.getNameSpace('REDIS_CACHE')
 
-  constructor (private pluginOptions: any, private services: DeepstreamServices, deepstreamConfig: DeepstreamConfig) {
+  constructor(private pluginOptions: any, private services: DeepstreamServices, deepstreamConfig: DeepstreamConfig) {
     super()
     this.flush = this.flush.bind(this)
     this.connection = new Connection(pluginOptions, this.logger)
   }
 
-  public async whenReady () {
+  public async whenReady() {
     await this.connection.whenReady()
   }
 
   /**
    * Gracefully close the connection to redis
    */
-  public async close () {
+  public async close() {
     await this.connection.close()
   }
 
-  public headBulk (recordNames: string[], callback: StorageHeadBulkCallback): void {
+  public headBulk(recordNames: string[], callback: StorageHeadBulkCallback): void {
     (this.connection.client as any).mget(recordNames.map((name) => `${name}_v`) as any, (error: any, result: any) => {
       const r = recordNames.reduce((v, name, index) => {
         if (result[index] !== null) {
@@ -55,16 +55,27 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
           v.m.push(name)
         }
         return v
-      }, { v: {}, m: []} as any)
+      }, { v: {}, m: [] } as any)
       callback(error, r.v, r.m)
     })
   }
 
-  public head (recordName: string, callback: StorageHeadCallback): void {
-    throw new Error('Head is not yet required by deepstream.')
+  public head(recordName: string, callback: StorageHeadCallback): void {
+    this.connection.client.get(`${recordName}_v`, (error: any, result: any) => {
+      if (error) {
+        callback(error.toString())
+        return
+      }
+
+      if (!result) {
+        callback(null, -1)
+        return
+      }
+      callback(null, Number(result))
+    })
   }
 
-  public deleteBulk (recordNames: string[], callback: StorageWriteCallback): void {
+  public deleteBulk(recordNames: string[], callback: StorageWriteCallback): void {
     const pipeline = this.connection.client.pipeline()
     pipeline.del(recordNames.map((name) => `${name}_v`) as any)
     pipeline.del(recordNames.map((name) => `${name}_d`) as any)
@@ -74,7 +85,7 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
   /**
    * Deletes an entry from the cache.
    */
-  public delete (recordName: string, callback: StorageWriteCallback) {
+  public delete(recordName: string, callback: StorageWriteCallback) {
     if (this.writeBuffer.has(recordName)) {
       console.trace(`deepstream-redis: A write action is already registered for ${recordName}`)
     }
@@ -85,7 +96,7 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
   /**
    * Writes a value to the cache.
    */
-  public set (recordName: string, version: number, data: any, callback: StorageWriteCallback) {
+  public set(recordName: string, version: number, data: any, callback: StorageWriteCallback) {
     if (this.writeBuffer.has(recordName)) {
       console.trace(`deepstream-redis: A write action is already registered for ${recordName}`)
     }
@@ -97,7 +108,7 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
   /**
    * Retrieves a value from the cache
    */
-   public get (key: string, callback: StorageReadCallback) {
+  public get(key: string, callback: StorageReadCallback) {
     if (this.writeBuffer.has(key)) {
       console.log(`deepstream-redis: A write action is registered for ${key}`)
     }
@@ -112,20 +123,20 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
       callbacks.push(callback)
     }
     this.scheduleFlush()
-   }
+  }
 
-   public scheduleFlush () {
-     if (this.readBuffer.size + this.writeBuffer.size > 5000) {
-       this.flush()
-       return
-     }
-     if (!this.timeoutSet) {
-       this.timeoutSet = true
-       process.nextTick(this.flush)
-     }
-   }
+  public scheduleFlush() {
+    if (this.readBuffer.size + this.writeBuffer.size > 5000) {
+      this.flush()
+      return
+    }
+    if (!this.timeoutSet) {
+      this.timeoutSet = true
+      process.nextTick(this.flush)
+    }
+  }
 
-  public flush () {
+  public flush() {
     this.timeoutSet = false
     const pipeline = this.connection.client.pipeline()
 
@@ -150,20 +161,20 @@ export class CacheConnector extends DeepstreamPlugin implements DeepstreamCache 
     this.writeBuffer.clear()
 
     for (const [recordName, callbacks] of this.readBuffer.entries()) {
-    (pipeline as any).mget([`${recordName}_v`, `${recordName}_d`], (error: any, result: any) => {
-      if (typeof callbacks === 'function') {
-        this.readCallback(callbacks, error, result)
-      } else {
-        callbacks.forEach((callback) => this.readCallback(callback, error, result))
-      }
-    })
+      (pipeline as any).mget([`${recordName}_v`, `${recordName}_d`], (error: any, result: any) => {
+        if (typeof callbacks === 'function') {
+          this.readCallback(callbacks, error, result)
+        } else {
+          callbacks.forEach((callback) => this.readCallback(callback, error, result))
+        }
+      })
     }
     this.readBuffer.clear()
 
     pipeline.exec()
   }
 
-  private readCallback (callback: StorageReadCallback, error: any, result: any) {
+  private readCallback(callback: StorageReadCallback, error: any, result: any) {
     if (error) {
       callback(error.toString())
       return
